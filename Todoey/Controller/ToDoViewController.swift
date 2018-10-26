@@ -11,10 +11,21 @@ import UIKit
 class ToDoViewController: UITableViewController {
     
     
-    let itemArray = ["find Mike","Buy Eggos","Go To Yasser"]
+    var itemArray = ["find Mike","Buy Eggos","Go To Yasser"]
+    
+    let defautls = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+       
+            if let  items = defautls.array(forKey: "ToDoListArray") as? [String]{
+                print(items)
+                
+            itemArray = items
+            
+        }
         
         
         tableView.register(UINib(nibName: "TableViewCell", bundle: nil) ,forCellReuseIdentifier: "CuctomXib")
@@ -62,7 +73,45 @@ class ToDoViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    //MARK: Add  new Item Method
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        
+        
+        let alert = UIAlertController(title: "Add New Todoey Item ", message: "please enter a new Item", preferredStyle: .alert)
+        
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //TODO: What will happen
+            print("This is where everything is done!! \(textField.text!)")
+            
+          
+            self.itemArray.append(textField.text!)
+              self.defautls.set(self.itemArray, forKey: "ToDoListArray")
+            // Reloads the Tables Data
+            self.configureTableView()
+            self.tableView.reloadData()
+            
+            
+        }
+        
+        
+        alert.addAction(action)
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create New Item"
+            textField = alertTextField
+            
+            
+        }
+        
+        present(alert,animated: true,completion: nil)
+        
+        
+        
+    }
     
-
+    
 }
 
