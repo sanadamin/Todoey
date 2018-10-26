@@ -11,19 +11,41 @@ import UIKit
 class ToDoViewController: UITableViewController {
     
     
-    var itemArray = ["find Mike","Buy Eggos","Go To Yasser"]
+//    var itemArray = ["find Mike","Buy Eggos","Go To Yasser"]
+    var itemArray = [Item]()
+    
+  
+    
+    
+    
+    
     
     let defautls = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+          let newItem = Item()
+        newItem.title = "Go To Market"
+        itemArray.append(newItem)
+        let newItem1 = Item()
+        newItem1.title = "Go To Pharmacy"
+        newItem1.done = true
+        itemArray.append(newItem1)
+        
+        let newItem2 = Item()
+        newItem2.title = "Go To Yasser"
+        
+        
+        
+        
+        
         
        
-            if let  items = defautls.array(forKey: "ToDoListArray") as? [String]{
+        if let  items = defautls.array(forKey: "ToDoListArray1") as? [Item]{
                 print(items)
                 
-            itemArray = items
+//         itemArray = items
             
         }
         
@@ -41,8 +63,21 @@ class ToDoViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CuctomXib", for: indexPath) as! TableViewCell
-        cell.labeltext.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        
+        
+        
+        cell.labeltext.text = itemArray[indexPath.row].title
         cell.imageViewLabel.image = UIImage(named: "umniah")
+        
+        
+        cell.accessoryType = item.done == true ? .checkmark : .none
+//
+//        if item.done == true{
+//            cell.accessoryType = .checkmark
+//        }else{
+//            cell.accessoryType = .none
+//        }
 //        tableView.separatorStyle = .none
         return cell
     }
@@ -60,7 +95,9 @@ class ToDoViewController: UITableViewController {
     //MARK: TableView Delegate Methods "Do Something When Clicked"
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        print(itemArray[indexPath.row])
+        let item = itemArray[indexPath.row]
         
+       item.done = !item.done
         
         
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
@@ -69,7 +106,7 @@ class ToDoViewController: UITableViewController {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         
-        
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -87,9 +124,13 @@ class ToDoViewController: UITableViewController {
             //TODO: What will happen
             print("This is where everything is done!! \(textField.text!)")
             
-          
-            self.itemArray.append(textField.text!)
-              self.defautls.set(self.itemArray, forKey: "ToDoListArray")
+            
+            
+            
+            let newItem22 = Item()
+            newItem22.title = textField.text!
+            self.itemArray.append(newItem22)
+//            self.defautls.set(self.itemArray, forKey: "ToDoListArray1")
             // Reloads the Tables Data
             self.configureTableView()
             self.tableView.reloadData()
